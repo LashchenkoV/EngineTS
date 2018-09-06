@@ -12,14 +12,10 @@ var __extends = (this && this.__extends) || (function () {
 var Main = (function () {
     function Main(_canvas) {
         this._canvas = _canvas;
+        this._cursor = new Cursor(0, 0);
         this._ctx = this._canvas.getContext("2d");
-        var f = new CustomFigure([
-            new Point(100, 100),
-            new Point(200, 100),
-            new Point(200, 50),
-            new Point(100, 50),
-        ], { border: new ColorRGBA(255, 0, 0), field: new ColorRGBA(0, 255, 0) });
-        f.draw(this._ctx);
+        this.update();
+        this.bindEvent();
     }
     Object.defineProperty(Main.prototype, "ctx", {
         get: function () { return this._ctx; },
@@ -31,6 +27,22 @@ var Main = (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Main.prototype, "cursor", {
+        get: function () { return this._cursor; },
+        enumerable: true,
+        configurable: true
+    });
+    Main.prototype.bindEvent = function () {
+        var _this = this;
+        this._canvas.addEventListener("click", function (e) {
+            e.preventDefault();
+            _this._cursor.setFromEvent(e);
+        });
+    };
+    Main.prototype.update = function () {
+        var _this = this;
+        requestAnimationFrame(function () { return _this.update(); });
+    };
     return Main;
 }());
 window.addEventListener("load", function () {
@@ -219,6 +231,29 @@ var ColorRGBA = (function (_super) {
     };
     return ColorRGBA;
 }(Color));
+var Cursor = (function () {
+    function Cursor(_x, _y) {
+        this._x = _x;
+        this._y = _y;
+    }
+    Object.defineProperty(Cursor.prototype, "x", {
+        get: function () { return this._x; },
+        set: function (value) { this._x = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Cursor.prototype, "y", {
+        get: function () { return this._y; },
+        set: function (value) { this._y = value; },
+        enumerable: true,
+        configurable: true
+    });
+    Cursor.prototype.setFromEvent = function (e) {
+        this._x = e.clientX - e.target.parentElement.offsetLeft;
+        this._y = e.clientY - e.target.parentElement.offsetTop;
+    };
+    return Cursor;
+}());
 var Angle = (function () {
     function Angle() {
     }
@@ -298,6 +333,16 @@ var Figure = (function () {
         enumerable: true,
         configurable: true
     });
+    Figure.prototype.isEntryPoint = function (p) {
+        var c = false;
+        var j = this._points.length - 1;
+        for (var i = 0; i < this._points.length; i++) {
+            if (((this._points.length[i].y <= p.y && p.y < this._points.length[j].y) || (this._points.length[j].y <= p.y && p.y < this._points.length[i].y)) && p.x > (this._points.length[j].x - this._points.length[i].x) * (p.y - this._points.length[i].y) / (this._points.length[j].y - this._points.length[i].y) + this._points.length[i].x)
+                c = !c;
+            j = i;
+        }
+        return c;
+    };
     Figure.prototype.draw = function (ctx) {
         var index = 0;
         var figure = new Path2D();

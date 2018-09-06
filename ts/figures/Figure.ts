@@ -20,7 +20,24 @@ abstract class Figure{
     get points(): Array<Point> {return this._points;}
     get square(): number {return this._square;}
 
+    /**
+     * Вхождение точки в фигуру
+     * @param p
+     */
+    public isEntryPoint(p:Point):boolean{
+        let c:boolean = false;
+        let j:number = this._points.length-1;
+        for (let i = 0; i < this._points.length; i++) {
+            if (((this._points.length[i].y <= p.y && p.y < this._points.length[j].y) || (this._points.length[j].y <= p.y && p.y < this._points.length[i].y)) && p.x > (this._points.length[j].x - this._points.length[i].x) * (p.y - this._points.length[i].y) / (this._points.length[j].y - this._points.length[i].y) + this._points.length[i].x) c = !c;
+            j = i;
+        }
+        return c;
+    }
 
+    /**
+     * Отрисовка
+     * @param ctx
+     */
     public draw(ctx:CanvasRenderingContext2D): void{
         let index:number=0;
         let figure = new Path2D();
