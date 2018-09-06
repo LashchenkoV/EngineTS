@@ -10,10 +10,32 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 var Main = (function () {
-    function Main() {
+    function Main(_canvas) {
+        this._canvas = _canvas;
+        this._ctx = this._canvas.getContext("2d");
+        var f = new CustomFigure([
+            new Point(100, 100),
+            new Point(200, 100),
+            new Point(200, 50),
+            new Point(100, 50),
+        ], { border: new ColorRGBA(255, 0, 0), field: new ColorRGBA(0, 255, 0) });
+        f.draw(this._ctx);
     }
+    Object.defineProperty(Main.prototype, "ctx", {
+        get: function () { return this._ctx; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Main.prototype, "canvas", {
+        get: function () { return this._canvas; },
+        enumerable: true,
+        configurable: true
+    });
     return Main;
 }());
+window.addEventListener("load", function () {
+    new Main(document.getElementById("canvas"));
+});
 var Point = (function () {
     function Point(_x, _y, _mass) {
         if (_mass === void 0) { _mass = 1; }
@@ -277,18 +299,17 @@ var Figure = (function () {
         configurable: true
     });
     Figure.prototype.draw = function (ctx) {
-        ctx.beginPath();
+        var index = 0;
+        var figure = new Path2D();
         ctx.fillStyle = this._colors.field.str;
         ctx.strokeStyle = this._colors.border.str;
-        var index = 0;
-        var line = new Path2D();
+        figure.moveTo(this._points[0].x, this._points[0].y);
         for (var i = 0; i < this._points.length; i++) {
-            line.moveTo(this._points[i].x, this._points[i].y);
-            index = i + 1 > this._points.length ? 0 : i;
-            line.lineTo(this._points[index].x, this._points[index].y);
+            index = i + 1 >= this._points.length ? 0 : i + 1;
+            figure.lineTo(this._points[index].x, this._points[index].y);
         }
-        ctx.stroke(line);
-        ctx.fill(line);
+        ctx.fill(figure);
+        ctx.stroke(figure);
     };
     Figure.prototype.getSquare = function () {
         var square = 0;

@@ -22,18 +22,17 @@ abstract class Figure{
 
 
     public draw(ctx:CanvasRenderingContext2D): void{
-        ctx.beginPath();
+        let index:number=0;
+        let figure = new Path2D();
         ctx.fillStyle = this._colors.field.str;
         ctx.strokeStyle = this._colors.border.str;
-        let index:number=0;
-        let line:any = new Path2D();
+        figure.moveTo(this._points[0].x, this._points[0].y);
         for(let i: number = 0; i < this._points.length; i++){
-            line.moveTo(this._points[i].x, this._points[i].y);
-            index = i+1>this._points.length?0:i;
-            line.lineTo(this._points[index].x, this._points[index].y);
+            index = i+1>=this._points.length?0:i+1;
+            figure.lineTo(this._points[index].x, this._points[index].y);
         }
-        ctx.stroke(line);
-        ctx.fill(line);
+        ctx.fill(figure);
+        ctx.stroke(figure);
     }
 
     /**

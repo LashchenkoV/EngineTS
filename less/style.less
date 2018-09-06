@@ -1,0 +1,28 @@
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: content-box;
+}
+
+
+.engine{
+  @widthCanvas:1100px;
+  @heightCanvas:600px;
+
+  width: @widthCanvas;
+  height: @heightCanvas;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -@widthCanvas/2;
+  margin-top: -@heightCanvas/2;
+
+  canvas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ebebeb;
+    border: 1px solid #c3c3c3;
+  }
+}
