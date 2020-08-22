@@ -1,20 +1,29 @@
+interface PV{
+    x:number;
+    y:number;
+}
 /**
  * Класс содержит статические ф-ции которые выполняют основные операции над 2D векторами
  * И является вспомагательным
  */
-abstract class Vector {
+abstract class Vector{
 
     /**
      * Вращение вектора
      * @param v
      * @param rad
      */
-    public static rotate(v:Vector2D, rad:number){
+    public static rotate(v:Vector2D|Point, rad:number){
         let x = v.x * Math.cos(rad) - v.y * Math.sin(rad);
         let y = v.x * Math.sin(rad) + v.y * Math.cos(rad);
         return new Vector2D(x,y);
     }
 
+    public static rotatePoint(v:Vector2D|Point, rad:number, p:Point){
+        let x = v.x + (p.x - v.x) * Math.cos(rad) - (p.y - v.y) * Math.sin(rad);
+        let y = v.y + (p.y - v.y) * Math.cos(rad) + (p.x - v.x) * Math.sin(rad);
+        return new Vector2D(x,y);
+    }
     /**
      * Расстояние
      */
@@ -49,7 +58,7 @@ abstract class Vector {
      * @param v1
      * @param v2
      */
-    public static multipleScalar(v1:Vector2D, v2:Vector2D):number{
+    public static multipleScalar(v1:Vector2D|Point, v2:Vector2D|Point):number{
         return v1.x * v2.x + v1.y * v2.y;
     }
 

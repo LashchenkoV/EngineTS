@@ -1,10 +1,25 @@
-class Vector2D {
+class Vector2D implements PV{
     public constructor(private _x:number, private _y:number){}
 
     get x(): number {return this._x;}
     set x(value: number) {this._x = value;}
     get y(): number {return this._y;}
     set y(value: number) {this._y = value;}
+
+    /**
+     * Вращение
+     */
+    public rotate(rad:number):void{
+        let res = Vector.rotate(this,rad);
+        this._x = res.x;
+        this._y = res.y;
+    }
+
+    public rotatePoint(p:Point, rad:number):void{
+        let res = Vector.rotatePoint(this,rad,p);
+        this._x = res.x;
+        this._y = res.y;
+    }
 
     /**
      * Нормализация к единичному
@@ -42,7 +57,7 @@ class Vector2D {
      * Скалярное произвидение векторов
      * @param v
      */
-    public multipleScalar(v:Vector2D):number{
+    public multipleScalar(v:Vector2D|Point):number{
         return Vector.multipleScalar(this,v);
     }
 
